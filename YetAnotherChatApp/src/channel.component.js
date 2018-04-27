@@ -1,7 +1,16 @@
 import React from 'react';
-import {View, Text, TextInput, Button, SafeAreaView, ScrollView, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  SafeAreaView,
+  FlatList,
+  KeyboardAvoidingView,
+  StyleSheet} from 'react-native';
 import {subscribeToMessages, addMessage} from './message-service';
 import commonStyles from './styles';
+import {Avatar} from 'react-native-ui-lib'
 
 export default class Channel extends React.PureComponent {
 
@@ -27,7 +36,7 @@ export default class Channel extends React.PureComponent {
     this.unsubscribe();
   }
 
-  onReceiveMessages = messages => this.setState({messages});
+  onReceiveMessages = messages => this.setState({messages: messages.reverse()});
 
   onChangeText = messageDraft => {
     this.setState({messageDraft});
@@ -44,17 +53,15 @@ export default class Channel extends React.PureComponent {
     const {name, channel} = this.props.navigation.state.params;
 
     return (
-
         <KeyboardAvoidingView keyboardVerticalOffset={90} enabled behavior="padding" style={commonStyles.container}>
           <SafeAreaView>
-            <ScrollView style={{flex: 1}}>
-              {
-                this
-                  .state
-                  .messages
-                  .map(({text, id}) => <View key={id}><Text>{text}</Text></View>)
-              }
-            </ScrollView>
+            <FlatList
+              style={{flex: 1}}
+              data={this.state.messages}
+              inverted={true}
+              keyExtractor={item => item.id}
+              renderItem={({item}) => <Message message={item}/>}>
+            </FlatList>
             <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
                 <TextInput style={styles.input}
                            onChangeText={this.onChangeText}
@@ -63,11 +70,21 @@ export default class Channel extends React.PureComponent {
                 <Button disabled={!this.state.messageDraft} title={'Send'} onPress={this.sendMessage}/>
             </View>
           </SafeAreaView>
-
         </KeyboardAvoidingView>
     );
   }
 }
+
+const Message = ({message}) => {
+  return (
+    <View style={{flexDirection: 'row'}}>
+      <Avatar label={message.sender.substring(0, 2)}/>
+      <Text>
+        {message.text}
+      </Text>
+    </View>
+  )
+};
 
 const styles = StyleSheet.create({
   input: {
