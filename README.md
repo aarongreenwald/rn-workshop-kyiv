@@ -74,7 +74,7 @@ to allow users to send messages. First let's install some dependencies:
 npm install --save firebase lodash
 ```
 
-To save you time, I've created a quick-and-dirty service for handling the Firebase connections so you don't have to bother with learning the Firebase API if you're not familiar with it. You can just copy the code in [message-service.js](./message-service.js) into your app. 
+To save you time, I've created a quick-and-dirty service for handling the Firebase connections so you don't have to bother with learning the Firebase API if you're not familiar with it. You can just copy the code in [message-service.js](YetAnotherChatApp/src/message-service.js) into your app. 
 
 _Note: if you ever actually have to work with Firebase to build a chat service, DO NOT EVEN THINK of using code that looks like this in production. It's buggy, has terrible performance, and a host of other problems. For a better example of a facade on top of firebase, check out the [code](https://github.com/wix-incubator/firebase-service) we actually use in production to handle hundreds of thousands of messages every day._
 
